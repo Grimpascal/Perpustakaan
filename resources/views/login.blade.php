@@ -26,7 +26,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('verifLogin') }}"  class="space-y-4">
+            <form action="{{ route('verifLogin') }}"  class="space-y-4" method="POST">
                 @csrf
                 <div>
                     <label class="block mb-1 font-semibold text-gray-700">Username</label>
