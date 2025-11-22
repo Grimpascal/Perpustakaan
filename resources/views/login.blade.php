@@ -14,7 +14,7 @@
 
         <div class="md:w-1/2 p-8 flex flex-col justify-center">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
-                Selamat Datang 👋
+                Selamat Datang
             </h2>
             <p class="text-center text-gray-500 mb-6">
                 Silakan masuk untuk mengakses Dashboard Perpustakaan

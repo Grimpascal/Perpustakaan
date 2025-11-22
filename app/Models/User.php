@@ -18,13 +18,12 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-    protected $table = 'pengguna';
 
     protected $fillable = [
-        'Nama Lengkap',
-        'Email',
         'username',
-        'Password',
+        'nama_lengkap',
+        'email',
+        'password',
     ];
 
     /**
@@ -33,7 +32,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'Password',
+        'password',
         'remember_token',
     ];
 
@@ -45,7 +44,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'Password' => 'hashed',
+            'password' => 'hashed',
         ];
     }
 }

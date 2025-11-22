@@ -17,11 +17,11 @@ class userSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('pengguna')->insert([ // <-- Ubah dari 'users' ke 'pengguna'
-            'Nama Lengkap' => 'Administrator Testing', // <-- Nama kolom
-            'Email' => 'admin@example.com', // <-- Nama kolom
+        DB::table('users')->insert([
+            'nama_lengkap' => 'Administrator Testing', // <-- Nama kolom
             'username' => 'admin_test',
-            'Password' => Hash::make('password'), // <-- Nama kolom
+            'email' => 'admin@example.com', // <-- Nama kolom
+            'password' => Hash::make('password'), // <-- Nama kolom
             'created_at' => now(),
             'updated_at' => now(),
             'remember_token' => Str::random(10), 
