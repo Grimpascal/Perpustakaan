@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Illuminate\Support\Str;
 
 class loginController extends Controller
 {
@@ -10,6 +13,12 @@ class loginController extends Controller
         $title = 'Login';
 
         return view('login', compact('title'));
+    }
+
+    public function showRegister(){
+        $title = 'Register';
+
+        return view('register', compact('title'));
     }
 
     public function verifLogin(Request $request){
@@ -28,6 +37,18 @@ class loginController extends Controller
         
             return redirect()->intended('/dashboard');
         } 
+    }
+
+    public function regisUser(Request $request){
+        $user = User::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => hash::make($request->password),
+            'remember_token' => Str::random(60),
+        ]);
+
+        return redirect('login');
     }
 
     public function logout(Request $request){

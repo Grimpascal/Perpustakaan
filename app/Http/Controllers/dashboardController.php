@@ -12,7 +12,7 @@ class dashboardController extends Controller
         $title = 'Dashboard';
 
         if ($user->role == 'admin'){
-            return view('dashboardAdmin', compact('user'));
+            return view('dashboardAdmin', compact('user', 'title'));
         }
 
         return view('dashboardUser', compact('title', 'user'));
