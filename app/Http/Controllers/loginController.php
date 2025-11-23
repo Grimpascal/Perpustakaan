@@ -37,9 +37,23 @@ class loginController extends Controller
         
             return redirect()->intended('/dashboard');
         } 
+
+        return back()->with('errorLogin', 'Username atau password anda salah!');
     }
 
     public function regisUser(Request $request){
+
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ],
+        [
+            'min' => ':attribute minimal :min karakter.',
+            'unique' => ':attribute sudah ada',
+        ]);
+
         $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'username' => $request->username,
@@ -47,6 +61,10 @@ class loginController extends Controller
             'password' => hash::make($request->password),
             'remember_token' => Str::random(60),
         ]);
+
+        if (empty($request->nama_lengkap) || empty($request->username) || empty($request->email) || empty($request->password)) {
+         return back()->with('errorRegister', 'Ada kolom yang kosong harus diisi!');
+        }
 
         return redirect('login');
     }

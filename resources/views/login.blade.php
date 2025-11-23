@@ -20,9 +20,9 @@
                 Silakan masuk untuk mengakses Dashboard Perpustakaan
             </p>
 
-            @if(session('error'))
+            @if(session('errorLogin'))
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {{ session('error') }}
+                    {{ session('errorLogin') }}
                 </div>
             @endif
 
@@ -40,6 +40,9 @@
                     <input type="password" name="password" 
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                            placeholder="Masukkan password">
+                </div>
+                <div>
+                    <a href="{{ route('register') }}">Belum Punya Akun?</a>
                 </div>
 
                 <button type="submit" 
