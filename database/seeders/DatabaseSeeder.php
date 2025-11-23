@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            userSeeder::class
+            UserSeeder::class,
+            BookSeeder::class,
+            // PeminjamanSeeder::class,    // aktifkan kalau ingin sample peminjaman
+            // FavoriteSeeder::class,      // aktifkan kalau ingin sample favorit
         ]);
     }
 }

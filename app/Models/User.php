@@ -20,11 +20,11 @@ class User extends Authenticatable
 
 
     protected $fillable = [
+        'name',
         'username',
-        'nama_lengkap',
         'email',
         'password',
-        'remember_token',
+        'role'
     ];
 
     /**
@@ -47,5 +47,15 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+     public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'user_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'user_id');
     }
 }

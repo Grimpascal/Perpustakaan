@@ -17,18 +17,30 @@ class userSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'nama_lengkap' => 'Administrator Testing', // <-- Nama kolom
-            'username' => 'admin_test',
-            'email' => 'admin@example.com', // <-- Nama kolom
-            'password' => Hash::make('password'), // <-- Nama kolom
-            'created_at' => now(),
-            'updated_at' => now(),
-            'remember_token' => Str::random(10), 
+        // Admin
+        User::create([
+            'name' => 'Administrator',
+            'email' => 'admin@library.com',
+            'username' => 'admin',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
         ]);
 
-        User::factory()
-        ->count(10)
-        ->create();
+        // User Biasa
+        User::create([
+            'name' => 'User Satu',
+            'email' => 'user1@library.com',
+            'username' => 'user1',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'name' => 'User Dua',
+            'email' => 'user2@library.com',
+            'username' => 'user2',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
     }
 }

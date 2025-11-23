@@ -7,6 +7,12 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    <x-navbar></x-navbar>
+    
+    <main class="min-h-screen">
+        
+        @yield('content')
+    </main>
+    
+    
 </body>
 </html>

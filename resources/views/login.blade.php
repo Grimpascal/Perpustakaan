@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('Layouts.auth')
 
 @section('title', $title)
 
@@ -6,8 +6,8 @@
 <div class="min-h-screen flex items-center justify-center from-purple-100  py-12">
     <div class="bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-4xl">
         
-        <div class="md:w-1/2 bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center p-8">
-            <img src="{{ asset('images/undraw_book-writer_ri5u.svg') }}" 
+        <div class="md:w-1/2 bg-blue-300 flex items-center justify-center p-8">
+            <img src="{{ asset('images/undraw_reading-time_gcvc.svg') }}" 
                  alt="Perpustakaan" 
                  class="w-3/4 drop-shadow-lg ">
         </div>
@@ -38,12 +38,12 @@
                 <div>
                     <label class="block mb-1 font-semibold text-gray-700">Password</label>
                     <input type="password" name="password" 
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Masukkan password">
                 </div>
 
                 <button type="submit" 
-                        class="w-full bg-linear-to-r from-purple-600 to-indigo-600 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition-all duration-200">
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition-all duration-200">
                     Login
                 </button>
             </form>

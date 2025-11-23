@@ -1,4 +1,4 @@
-@extends('layouts.db')
+@extends('Layouts.db')
 
 @section('title', $title)
 
