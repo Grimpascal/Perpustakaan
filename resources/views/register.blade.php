@@ -7,14 +7,12 @@
 
     <div class="bg-white shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-5xl">
 
-        <!-- Left Image Section -->
         <div class="md:w-1/2 bg-blue-300 flex items-center justify-center p-10">
             <img src="{{ asset('images/undraw_book-writer_ri5u.svg') }}"
                  alt="Register Illustration"
                  class="w-3/4 drop-shadow-lg">
         </div>
 
-        <!-- Right Form Section -->
         <div class="md:w-1/2 p-10 flex flex-col justify-center">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-5">
                 Daftar Akun Baru
@@ -39,6 +37,9 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 
                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Masukkan nama lengkap Anda">
+                    @error('nama_lengkap')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -47,6 +48,9 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 
                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Masukkan username Anda">
+                    @error('username')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -55,6 +59,9 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 
                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Masukkan email Anda">
+                    @error('email')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -63,6 +70,20 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 
                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Masukkan password">
+                    @error('username')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-semibold text-gray-700">Konfirmasi Password</label>
+                    <input type="password" name="password_confirmation"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Ulangi password">
+                    @error('password_confirmation')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <button type="submit"

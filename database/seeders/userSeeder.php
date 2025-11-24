@@ -19,7 +19,7 @@ class userSeeder extends Seeder
     {
         // Admin
         User::create([
-            'name' => 'Administrator',
+            'nama_lengkap' => 'Administrator',
             'email' => 'admin@library.com',
             'username' => 'admin',
             'password' => Hash::make('admin123'),
@@ -28,19 +28,15 @@ class userSeeder extends Seeder
 
         // User Biasa
         User::create([
-            'name' => 'User Satu',
+            'nama_lengkap' => 'User Satu',
             'email' => 'user1@library.com',
             'username' => 'user1',
             'password' => Hash::make('password'),
             'role' => 'user',
         ]);
 
-        User::create([
-            'name' => 'User Dua',
-            'email' => 'user2@library.com',
-            'username' => 'user2',
-            'password' => Hash::make('password'),
-            'role' => 'user',
-        ]);
+        User::factory()
+        ->count(100)
+        ->create();
     }
 }

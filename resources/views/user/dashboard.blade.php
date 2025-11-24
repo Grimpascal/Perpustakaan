@@ -24,7 +24,7 @@
 
     {{-- SEARCH BAR --}}
     <div class="mb-6">
-        <form action="{{ route('user.dashboard') }}" method="GET">
+        <form action="{{ route('dashboard') }}" method="GET">
             <input 
                 type="text"
                 name="search"

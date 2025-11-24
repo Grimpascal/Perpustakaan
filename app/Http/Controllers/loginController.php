@@ -35,7 +35,7 @@ class loginController extends Controller
                 return redirect()->intended('/dashboard');
             }
         
-            return redirect()->intended('/user/dashboard');
+            return redirect()->intended('/dashboard');
         } 
 
         return back()->with('errorLogin', 'Username atau password anda salah!');

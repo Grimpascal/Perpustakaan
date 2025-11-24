@@ -20,29 +20,23 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('/dashboard', [dashboardController::class, 'showDB'])->name('showDB');
     Route::post('/logout', [loginController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
 
-    // dashboard
-    Route::get('/user/dashboard', [UserController::class, 'dashboard'])
-        ->name('user.dashboard');
+    Route::get('/dashboard', [UserController::class, 'dashboard'])
+        ->name('dashboard');
 
-    // buku
     Route::get('/user/buku', [UserController::class, 'buku'])
         ->name('user.buku');
 
-    // pinjam buku
     Route::post('/user/buku/pinjam/{id}', [UserController::class, 'pinjam'])
         ->name('user.pinjam');
 
-    // pengembalian buku
     Route::post('/user/buku/kembalikan/{id}', [UserController::class, 'kembalikan'])
         ->name('user.kembalikan');
 
-    // wishlist
     Route::get('/user/favorite', [UserController::class, 'favorite'])
         ->name('user.favorite');
 
@@ -52,11 +46,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::delete('/user/favorite/delete/{id}', [UserController::class, 'hapusFavorite'])
         ->name('user.favorite.delete');
 
-    // profil
     Route::get('/user/profil', [UserController::class, 'profil'])
         ->name('user.profil');
+});
 
-    // logout
-    Route::post('/logout', [UserController::class, 'logout'])
-        ->name('logout');
+Route::middleware(['auth', 'role:admin'])->group(function (){
+    Route::get('/dashboard', [UserController::class, 'dashboard'])
+        ->name('dashboard');
 });

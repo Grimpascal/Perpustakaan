@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('nama_lengkap',255);
             $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'user'])->default('user');
-            $table->text('alamat')->nullable();
-            $table->string('telepon')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
+
+        if (! Schema::hasColumn('users', 'nama_lengkap')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('nama_lengkap', 255)->after('id');
+            });
+        }
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -47,5 +52,11 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+
+        if (Schema::hasColumn('users', 'nama_lengkap')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('nama_lengkap');
+            });
+        }
     }
 };

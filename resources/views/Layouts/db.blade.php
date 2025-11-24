@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-
-    {{-- Tailwind --}}
     @vite('resources/css/app.css')
-
-    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="bg-gray-100">
-
-    {{-- NAVBAR --}}
     <nav class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-
-                {{-- Left logo + nav --}}
                 <div class="flex">
                     <a href="/dashboard" class="shrink flex items-center">
                         <span class="text-2xl font-bold text-indigo-600">📚 Perpustakaan</span>
@@ -39,11 +31,7 @@
                         </a>
                     </div>
                 </div>
-
-                {{-- USER DROPDOWN --}}
                 <div class="hidden sm:ml-6 sm:flex sm:items-center relative">
-
-                    <!-- Trigger -->
                     <button id="profileMenuBtn" 
                         class="flex items-center space-x-2 px-3 py-2 rounded hover:bg-gray-100 transition">
                         
@@ -74,8 +62,6 @@
                         </form>
                     </div>
                 </div>
-
-                {{-- Mobile menu button --}}
                 <div class="-mr-2 flex items-center sm:hidden">
                     <button id="mobileBtn" type="button" 
                         class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
@@ -86,7 +72,6 @@
             </div>
         </div>
 
-        {{-- Mobile menu --}}
         <div id="mobileMenu" class="hidden sm:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <a href="/dashboard" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 bg-indigo-50 text-indigo-700">
@@ -111,13 +96,11 @@
         </div>
     </nav>
 
-    {{-- CONTENT --}}
     <main class="p-6">
         @yield('content')
     </main>
 
     <script>
-        // Profile Dropdown
         const btn = document.getElementById('profileMenuBtn');
         const dropdown = document.getElementById('profileDropdown');
 
@@ -125,7 +108,6 @@
             dropdown.classList.toggle('hidden');
         });
 
-        // Mobile Menu
         const mobileBtn = document.getElementById('mobileBtn');
         const mobileMenu = document.getElementById('mobileMenu');
 
