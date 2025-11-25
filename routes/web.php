@@ -20,13 +20,11 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/dashboard', [dashboardController::class, 'showDB'])->name('dashboard');
     Route::post('/logout', [loginController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
-
-    Route::get('/dashboard', [UserController::class, 'dashboard'])
-        ->name('dashboard');
 
     Route::get('/user/buku', [UserController::class, 'buku'])
         ->name('user.buku');
@@ -48,9 +46,4 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     Route::get('/user/profil', [UserController::class, 'profil'])
         ->name('user.profil');
-});
-
-Route::middleware(['auth', 'role:admin'])->group(function (){
-    Route::get('/dashboard', [UserController::class, 'dashboard'])
-        ->name('dashboard');
 });
