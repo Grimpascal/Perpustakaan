@@ -8,27 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // ============================
-    // DASHBOARD USER
-    // ============================
-    public function dashboard(Request $request)
-    {
-         $search = $request->input('search');
-        $books = Book::query();
-
-        if ($search) {
-            $books->where('title', 'like', "%{$search}%")
-                ->orWhere('author', 'like', "%{$search}%");
-        }
-
-        $books = $books->get();
-
-        return view('user.dashboard', compact('books'));
-    }
-
-    // ============================
-    // LIST BUKU
-    // ============================
     public function buku()
     {
         $books = Book::all();
@@ -142,17 +121,5 @@ class UserController extends Controller
             'title' => 'Profil Saya',
             'user' => Auth::user()
         ]);
-    }
-
-    // ============================
-    // LOGOUT
-    // ============================
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login')->with('success', 'Anda berhasil logout');
     }
 }
