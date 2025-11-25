@@ -1,3 +1,3 @@
-@extends('layouts.db')
+@extends('layouts.dbAdmin')
 
 @section('title', $title)

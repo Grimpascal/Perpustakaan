@@ -86,10 +86,6 @@
         </div>
     </nav>
 
-    <main class="p-6">
-        @yield('content')
-    </main>
-
     <script>
         const btn = document.getElementById('profileMenuBtn');
         const dropdown = document.getElementById('profileDropdown');

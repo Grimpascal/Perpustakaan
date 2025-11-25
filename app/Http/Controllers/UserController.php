@@ -112,9 +112,6 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Berhasil dihapus dari wishlist!');
     }
 
-    // ============================
-    // PROFIL USER
-    // ============================
     public function profil()
     {
         return view('user.profil', [
