@@ -12,7 +12,7 @@
                             Dashboard
                         </a>
 
-                        <a href="/books" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                        <a href="/buku" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
                             Buku
                         </a>
 

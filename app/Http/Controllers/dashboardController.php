@@ -24,6 +24,6 @@ class dashboardController extends Controller
             return view('dashboardAdmin', compact('user', 'title'));
         }
 
-        return view('dashboardUser', compact('title', 'user', 'books'));
+        return view('user/dashboardUser', compact('title', 'user', 'books'));
     }
 }

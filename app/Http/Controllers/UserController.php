@@ -11,11 +11,9 @@ class UserController extends Controller
     public function buku()
     {
         $books = Book::all();
+        $title = "Daftar Buku";
 
-        return view('user.buku', [
-            'title' => 'Daftar Buku',
-            'books' => $books
-        ]);
+        return view('user/buku', compact('title', 'books'));
     }
 
     // ============================
