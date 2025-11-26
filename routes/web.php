@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware(['auth', 'role:user'])->group(function () {
-
+    
     Route::get('buku', [UserController::class, 'buku'])
         ->name('buku');
 
