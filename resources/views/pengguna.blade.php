@@ -28,7 +28,6 @@
             </thead>
 
             <tbody class="bg-white divide-y divide-gray-200">
-                mau kutambahin fitur shorter
                 @foreach($users as $user)
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-600">
@@ -58,6 +57,7 @@
                 @endif
                 </tbody>
         </table>
+        {{ $users->links() }}
     </div>
 </div>
 @endsection

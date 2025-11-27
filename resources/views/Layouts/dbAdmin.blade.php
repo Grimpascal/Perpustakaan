@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-100 flex">
     <x-navbar-admin></x-navbar-admin>
-    <div id="KontenUtama" class="flex-1 p-6 mt-10 lg:ml-5">
+    <div id="KontenUtama" class="flex-1 p-4 lg:ml-5">
         @yield('content')
     </div>
 </body>
