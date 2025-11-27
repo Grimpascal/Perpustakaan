@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
+use App\Models\User;
 
 class dashboardController extends Controller
 {
@@ -12,6 +13,8 @@ class dashboardController extends Controller
         $user = Auth::user();
         $title = 'Dashboard';
         $query = Book::query();
+        $total_buku = Book::count();
+        $total_pengguna = User::count();
 
         if ($search = $request->get('search')) {
             $query->where('judul', 'like', "%{$search}%")
@@ -21,7 +24,7 @@ class dashboardController extends Controller
         $books = $query->orderBy('created_at', 'desc')->get();
 
         if ($user->role == 'admin'){
-            return view('dashboardAdmin', compact('user', 'title'));
+            return view('dashboardAdmin', compact('user', 'title', 'total_buku', 'total_pengguna'));
         }
 
         return view('user/dashboardUser', compact('title', 'user', 'books'));
