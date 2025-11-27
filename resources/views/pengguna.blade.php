@@ -3,7 +3,7 @@
 @section('title', $title)
 
 @section('content')
-<div class="p-4 sm:p-8">
+<div class="">
     <div class="overflow-x-auto bg-white shadow-xl rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             
