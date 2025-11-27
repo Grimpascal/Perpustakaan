@@ -26,9 +26,8 @@
                         <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
                     </button>
                     
-                    <!-- Dropdown Menu -->
                     <div id="kelolaDropdown" class="hidden mt-1 ml-4 space-y-1 border-l border-gray-200 pl-4">
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                        <a href="/pengguna" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
                             <i class="fa-solid fa-users w-4 mr-2 text-center"></i>
                             <span>Pengguna</span>
                         </a>

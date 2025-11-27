@@ -5,6 +5,7 @@ use App\Http\Controllers\loginController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\penggunaController;
 
 Route::get('/', function () {
     return view('landingPage');
@@ -46,4 +47,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     Route::get('/user/profil', [UserController::class, 'profil'])
         ->name('user.profil');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/pengguna', [penggunaController::class, 'showPengguna'])->name('showPengguna');
 });
