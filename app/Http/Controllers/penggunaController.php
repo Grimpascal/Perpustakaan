@@ -9,8 +9,8 @@ class penggunaController extends Controller
 {
     public function showPengguna() {
         $title = 'Pengguna';
-        $users = User::paginate(10);
+        $users = User::paginate(5);
 
-        return view('pengguna', compact('title','users'));
+        return view('admin/pengguna', compact('title','users'));
     }
 }

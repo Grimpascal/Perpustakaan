@@ -8,5 +8,6 @@
 </head>
 <body>
     <x-navbar-user></x-navbar-user>
+    @yield('content')
 </body>
 </html>
