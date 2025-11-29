@@ -5,16 +5,119 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold bg-linear-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                Manajemen Pengguna
-            </h1>
-            <p class="text-gray-500 mt-1">Kelola data pengguna dan akses sistem</p>
-        </div>
+    <div>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            Manajemen Pengguna
+        </h1>
+        <p class="text-gray-500 mt-1">Kelola data pengguna dan akses sistem</p>
+    </div>
+    <div class="flex items-center gap-4">
         <div class="flex items-center gap-2 text-sm text-gray-500">
             <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
                 {{ $users->total() }} Total Pengguna
             </span>
+        </div>
+        <!-- Tombol Tambah Pengguna -->
+        <button onclick="openAddModal()" 
+                class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Tambah Pengguna
+        </button>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden flex transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="addModalContent">
+            <div class="p-6">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Tambah Pengguna Baru</h3>
+                        <p class="text-sm text-gray-500 mt-1">Isi form untuk menambah pengguna baru</p>
+                    </div>
+                    <button onclick="closeAddModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Add User Form -->
+                <form id="addUserForm" method="POST" action="{{ route('pengguna.store') }}">
+                    @csrf
+                    
+                    <div class="space-y-4">
+                        <!-- Nama Lengkap -->
+                        <div>
+                            <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nama Lengkap *
+                            </label>
+                            <input type="text" id="nama_lengkap" name="nama_lengkap" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder="Masukkan nama lengkap" required>
+                        </div>
+
+                        <!-- Username -->
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+                                Username *
+                            </label>
+                            <input type="text" id="username" name="username" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder="Masukkan username" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                                Email *
+                            </label>
+                            <input type="email" id="email" name="email" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder="email@example.com" required>
+                        </div>
+
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                                Password *
+                            </label>
+                            <input type="password" id="password" name="password" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder="Minimal 8 karakter" required minlength="8">
+                            <p class="text-xs text-gray-500 mt-1">Password minimal 8 karakter</p>
+                        </div>
+
+                        <!-- Role -->
+                        <div>
+                            <label for="role" class="block text-sm font-medium text-gray-700 mb-1">
+                                Role *
+                            </label>
+                            <select id="role" name="role" 
+                                    class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer transition-all duration-200">
+                                <option value="">Pilih Role</option>
+                                <option value="admin">Administrator</option>
+                                <option value="user" selected>Pengguna</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 mt-6">
+                        <button type="button" onclick="closeAddModal()" 
+                                class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -227,7 +330,7 @@
     </div>
 </div>
 
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden flex transition-opacity duration-300">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
         <div class="p-6">
             <div class="flex justify-center mb-4">
@@ -258,7 +361,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit" 
-                            class="w-full px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md">
+                            class="w-full px-4 py-2.5 bg-linear-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md">
                         Ya, Hapus
                     </button>
                 </form>
@@ -305,7 +408,6 @@
 </style>
 
 <script>
-    // Modal functions
     function openDeleteModal(userId, userName) {
         const modal = document.getElementById('deleteModal');
         const modalContent = document.getElementById('modalContent');
@@ -352,6 +454,57 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();
+        }
+    });
+
+    // Add Modal functions
+function openAddModal() {
+    const modal = document.getElementById('addModal');
+    const modalContent = document.getElementById('addModalContent');
+    
+    // Reset form
+    document.getElementById('addUserForm').reset();
+    
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    }, 50);
+    
+    // Prevent background scroll
+    document.body.style.overflow = 'hidden';
+}
+
+    function closeAddModal() {
+        const modal = document.getElementById('addModal');
+        const modalContent = document.getElementById('addModalContent');
+        
+        // Hide modal with animation
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('addModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAddModal();
+        }
+    });
+
+    // Close modal with Escape key (update existing)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (!document.getElementById('addModal').classList.contains('hidden')) {
+                closeAddModal();
+            } else if (!document.getElementById('deleteModal').classList.contains('hidden')) {
+                closeDeleteModal();
+            }
         }
     });
 </script>

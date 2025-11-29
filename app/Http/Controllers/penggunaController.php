@@ -24,8 +24,7 @@ class penggunaController extends Controller
         return view('admin/pengguna', compact('title','users'));
     }
 
-    public function hapus(User $user)
-{
+    public function hapus(User $user) {
     try {
         if ($user->id === auth()->id()) {
             return redirect()->route('pengguna')
@@ -41,5 +40,27 @@ class penggunaController extends Controller
         return redirect()->route('pengguna')
             ->with('error', 'Terjadi kesalahan saat menghapus pengguna.');
     }
+    }
+
+    public function tambah(Request $request) {
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+            'role' => 'required|in:admin,user'
+        ]);
+
+        User::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role
+        ]);
+
+        return redirect()->route('pengguna')
+            ->with('success', 'Pengguna berhasil ditambahkan.');
+
 }
 }
