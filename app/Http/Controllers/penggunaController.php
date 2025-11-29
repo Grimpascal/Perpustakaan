@@ -23,4 +23,23 @@ class penggunaController extends Controller
 
         return view('admin/pengguna', compact('title','users'));
     }
+
+    public function hapus(User $user)
+{
+    try {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('pengguna')
+                ->with('error', 'Tidak dapat menghapus akun sendiri.');
+        }
+        
+        $user->delete();
+        
+        return redirect()->route('pengguna')
+            ->with('success', 'Pengguna berhasil dihapus.');
+            
+    } catch (\Exception $e) {
+        return redirect()->route('pengguna')
+            ->with('error', 'Terjadi kesalahan saat menghapus pengguna.');
+    }
+}
 }

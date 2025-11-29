@@ -1,15 +1,17 @@
 <body class="bg-gray-100">
-    <div class="lg:hidden fixed top-4 left-4 z-50">
+    <div class="lg:hidden fixed not-only:top-4 left-4 z-50">
         <button id="mobileMenuBtn" class="p-2 rounded-md bg-indigo-600 text-white shadow-lg">
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
     </div>
-    <div id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen flex flex-col">
-        <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200">
+    
+    <div id="sidebar" class="sticky top-0 lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out min-h-screen flex flex-col">
+        <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200 shrink-0">
             <a href="/dashboard" class="flex items-center space-x-2">
                 <span class="text-2xl font-bold text-indigo-600">📚 Perpustakaan</span>
             </a>
         </div>
+        
         <div class="flex-1 overflow-y-auto py-4">
             <nav class="px-4 space-y-2">
                 <a href="/dashboard" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 group transition-colors duration-200 active-link">
@@ -51,7 +53,7 @@
             </nav>
         </div>
 
-        <div class="border-t border-gray-200 p-4">
+        <div class="border-t border-gray-200 p-4 shrink-0">
             <div class="relative">
                 <button id="profileMenuBtn" class="flex items-center w-full px-2 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <img src="https://ui-avatars.com/api/?name={{ Auth::user()->nama_lengkap }}&background=6366F1&color=fff" 

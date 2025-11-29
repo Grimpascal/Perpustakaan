@@ -51,4 +51,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/pengguna', [penggunaController::class, 'showPengguna'])->name('pengguna');
+    Route::delete('/pengguna/{user}', [penggunaController::class, 'hapus'])->name('hapus');
 });
