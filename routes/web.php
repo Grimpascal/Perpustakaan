@@ -50,5 +50,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/pengguna', [penggunaController::class, 'showPengguna'])->name('showPengguna');
+    Route::get('/pengguna', [penggunaController::class, 'showPengguna'])->name('pengguna');
 });

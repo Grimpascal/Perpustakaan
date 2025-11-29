@@ -5,39 +5,39 @@
 @section('content')
     <div class="max-w-6xl mx-auto mt-10">
 
-    {{-- HEADER --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-3xl font-bold">Welcome, {{ Auth::user()->name }} 👋</h1>
-            <p class="text-gray-600">Explore and borrow your favorite books.</p>
+        {{-- HEADER --}}
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold">Welcome, {{ Auth::user()->name }} 👋</h1>
+                <p class="text-gray-600">Explore and borrow your favorite books.</p>
+            </div>
+
+            {{-- LOGOUT BUTTON --}}
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
         </div>
 
-        {{-- LOGOUT BUTTON --}}
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
-    </div>
+        {{-- SEARCH BAR --}}
+        <div class="mb-6">
+            <form action="{{ route('dashboard') }}" method="GET">
+                <input 
+                    type="text"
+                    name="search"
+                    placeholder="Search books..."
+                    class="w-full px-4 py-2 border rounded-lg shadow-sm"
+                    value="{{ request('search') }}"
+                >
+            </form>
+        </div>
 
-    {{-- SEARCH BAR --}}
-    <div class="mb-6">
-        <form action="{{ route('dashboard') }}" method="GET">
-            <input 
-                type="text"
-                name="search"
-                placeholder="Search books..."
-                class="w-full px-4 py-2 border rounded-lg shadow-sm"
-                value="{{ request('search') }}"
-            >
-        </form>
-    </div>
+        {{-- BOOK LIST --}}
+        <h2 class="text-2xl font-semibold mb-4">Available Books</h2>
 
-    {{-- BOOK LIST --}}
-    <h2 class="text-2xl font-semibold mb-4">Available Books</h2>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         @forelse($books as $book)
             <div class="bg-white shadow rounded-xl overflow-hidden border">
