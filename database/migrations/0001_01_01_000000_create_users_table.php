@@ -13,20 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_lengkap',255);
+            $table->string('nama_lengkap', 255); // Langsung tambah di sini
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'user'])->default('user');
+            $table->string('telepon')->nullable(); // TAMBAH
+            $table->text('alamat')->nullable(); // TAMBAH
+            $table->string('foto_profil')->nullable(); // TAMBAH
+            $table->timestamp('email_verified_at')->nullable(); // TAMBAH
             $table->rememberToken();
             $table->timestamps();
-        });
-
-        if (! Schema::hasColumn('users', 'nama_lengkap')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('nama_lengkap', 255)->after('id');
             });
-        }
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

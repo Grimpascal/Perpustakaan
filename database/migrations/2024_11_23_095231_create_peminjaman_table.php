@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali');
-            $table->date('tanggal_dikembalikan')->nullable();
-            $table->enum('status', ['dipinjam', 'selesai', 'telat'])->default('dipinjam');
-            $table->integer('denda')->default(0); // otomatis dihitung
+            $table->date('tanggal_harus_kembali');        // Batas pengembalian
+            $table->date('tanggal_dikembalikan')->nullable(); // Actual pengembalian
+            $table->enum('status', ['dipinjam', 'dikembalikan', 'terlambat'])->default('dipinjam');
+            $table->decimal('denda', 10, 2)->default(0);
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
