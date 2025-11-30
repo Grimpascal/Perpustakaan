@@ -6,6 +6,7 @@ use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\penggunaController;
+use App\Http\Controllers\bukuController;
 
 Route::get('/', function () {
     return view('landingPage');
@@ -54,4 +55,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/pengguna/{user}', [penggunaController::class, 'hapus'])->name('hapus');
     Route::post('/pengguna', [penggunaController::class, 'tambah'])->name('pengguna.tambah');
     Route::put('/pengguna/{user}', [penggunaController::class, 'update'])->name('pengguna.update');
+
+    Route::get('/buku/admin', [BukuController::class, 'index'])->name('buku.index');
+    Route::get('/buku/tambah', [BukuController::class, 'create'])->name('buku.create');
+    Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+    Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
+    Route::put('/buku/{buku}', [BukuController::class, 'update'])->name('buku.update');
+    Route::delete('/buku/{buku}', [BukuController::class, 'hapus'])->name('buku.destroy');
 });
