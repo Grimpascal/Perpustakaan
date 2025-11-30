@@ -52,5 +52,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/pengguna', [penggunaController::class, 'showPengguna'])->name('pengguna');
     Route::delete('/pengguna/{user}', [penggunaController::class, 'hapus'])->name('hapus');
-    Route::post('/pengguna', [penggunaController::class, 'tambah'])->name('pengguna.store');
+    Route::post('/pengguna', [penggunaController::class, 'tambah'])->name('pengguna.tambah');
+    Route::put('/pengguna/{user}', [penggunaController::class, 'update'])->name('pengguna.update');
 });

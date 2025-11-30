@@ -46,7 +46,7 @@
                 </div>
 
                 <!-- Add User Form -->
-                <form id="addUserForm" method="POST" action="{{ route('pengguna.store') }}">
+                <form id="addUserForm" method="POST" action="{{ route('pengguna.tambah') }}">
                     @csrf
                     
                     <div class="space-y-4">
@@ -274,7 +274,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                <button class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 tooltip" data-tooltip="Edit">
+                                <!-- Ganti button edit yang lama -->
+                                <button onclick="openEditModal({{ $user->id }}, {{ json_encode($user->nama_lengkap) }}, {{ json_encode($user->username) }}, {{ json_encode($user->email) }}, {{ json_encode($user->role) }})" 
+                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 tooltip" 
+                                        data-tooltip="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
@@ -327,6 +330,100 @@
             </div>
         </div>
         @endif
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden flex transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="editModalContent">
+        <div class="p-6">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Edit Pengguna</h3>
+                    <p class="text-sm text-gray-500 mt-1">Ubah data pengguna</p>
+                </div>
+                <button onclick="closeEditModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Edit User Form -->
+            <form id="editUserForm" method="POST">
+                @csrf
+                @method('PUT')
+                
+                <div class="space-y-4">
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label for="edit_nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nama Lengkap
+                        </label>
+                        <input type="text" id="edit_nama_lengkap" name="nama_lengkap" 
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                               placeholder="Masukkan nama lengkap">
+                    </div>
+
+                    <!-- Username -->
+                    <div>
+                        <label for="edit_username" class="block text-sm font-medium text-gray-700 mb-1">
+                            Username
+                        </label>
+                        <input type="text" id="edit_username" name="username" 
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                               placeholder="Masukkan username">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="edit_email" class="block text-sm font-medium text-gray-700 mb-1">
+                            Email
+                        </label>
+                        <input type="email" id="edit_email" name="email" 
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                               placeholder="email@example.com">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="edit_password" class="block text-sm font-medium text-gray-700 mb-1">
+                            Password Baru
+                        </label>
+                        <input type="password" id="edit_password" name="password" 
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                               placeholder="Kosongkan jika tidak ingin mengubah">
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah password</p>
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label for="edit_role" class="block text-sm font-medium text-gray-700 mb-1">
+                            Role
+                        </label>
+                        <select id="edit_role" name="role" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer transition-all duration-200">
+                            <option value="">Pilih Role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="user">Pengguna</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeEditModal()" 
+                            class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -502,6 +599,67 @@ function openAddModal() {
         if (e.key === 'Escape') {
             if (!document.getElementById('addModal').classList.contains('hidden')) {
                 closeAddModal();
+            } else if (!document.getElementById('deleteModal').classList.contains('hidden')) {
+                closeDeleteModal();
+            }
+        }
+    });
+
+    // Edit Modal functions
+function openEditModal(userId, namaLengkap, username, email, role) {
+    const modal = document.getElementById('editModal');
+    const modalContent = document.getElementById('editModalContent');
+    const editForm = document.getElementById('editUserForm');
+    
+    // Set form action
+    editForm.action = `/pengguna/${userId}`;
+    
+    // Fill form with current data
+    document.getElementById('edit_nama_lengkap').value = namaLengkap || '';
+    document.getElementById('edit_username').value = username || '';
+    document.getElementById('edit_email').value = email || '';
+    document.getElementById('edit_role').value = role || '';
+    document.getElementById('edit_password').value = '';
+    
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    }, 50);
+    
+    // Prevent background scroll
+    document.body.style.overflow = 'hidden';
+}
+
+    function closeEditModal() {
+        const modal = document.getElementById('editModal');
+        const modalContent = document.getElementById('editModalContent');
+        
+        // Hide modal with animation
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('editModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+
+    // Update Escape key handler untuk semua modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (!document.getElementById('addModal').classList.contains('hidden')) {
+                closeAddModal();
+            } else if (!document.getElementById('editModal').classList.contains('hidden')) {
+                closeEditModal();
             } else if (!document.getElementById('deleteModal').classList.contains('hidden')) {
                 closeDeleteModal();
             }
