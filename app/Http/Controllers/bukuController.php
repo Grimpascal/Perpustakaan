@@ -88,7 +88,6 @@ class bukuController extends Controller
     {
         $book = Book::findOrFail($id);
         
-        // Validasi hanya untuk field yang diisi
         $rules = [];
         $messages = [];
         
@@ -130,12 +129,10 @@ class bukuController extends Controller
         
         $validatedData = $request->validate($rules, $messages);
         
-        // Update hanya field yang diisi
         foreach ($validatedData as $key => $value) {
             $book->$key = $value;
         }
         
-        // Update status ketersediaan jika stok diubah
         if ($request->filled('stok')) {
             $book->is_available = $request->stok > 0;
         }
