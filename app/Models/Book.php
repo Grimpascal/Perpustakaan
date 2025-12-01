@@ -3,24 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Peminjaman;
-use Favorites;
 
 class Book extends Model
 {
-     protected $table = 'books';
+    protected $table = 'books';
 
     protected $fillable = [
         'judul',
         'penulis',
-        'penerbit',
+        'penerbit_id',
+        'kategori_id',
         'tahun',
-        'kategori',
+        'isbn',
+        'deskripsi',
+        'bahasa',
         'stok',
-        'cover'
+        'is_available',
+        'total_dipinjam'
     ];
 
-     public function peminjaman()
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function penerbit()
+    {
+        return $this->belongsTo(Penerbit::class, 'penerbit_id');
+    }
+
+    public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class, 'book_id');
     }

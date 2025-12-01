@@ -12,24 +12,28 @@ class bukuController extends Controller
 
     public function index(Request $request)
     {
+        $search = $request->get('search');
+        $kategori = $request->get('kategori');
         $title = 'Manajemen Buku';
-        
-        $books = Book::when(['kategori', 'penerbit'])
-            ->when($request->search, function($query, $search) {
+
+        $books = Book::with(['kategori', 'penerbit'])
+            ->when($search, function($query) use ($search) {
                 $query->where('judul', 'like', "%{$search}%")
                       ->orWhere('penulis', 'like', "%{$search}%")
                       ->orWhere('isbn', 'like', "%{$search}%");
             })
-            ->when($request->kategori, function($query, $kategori) {
+            ->when($kategori, function($query) use ($kategori) {
                 $query->where('kategori_id', $kategori);
             })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $kategories = Kategori::all();
-        
-        return view('admin/bukuAdmin', compact('title', 'books', 'kategories'));
+        $penerbits = Penerbit::all();
+
+        return view('admin/bukuAdmin', compact('books', 'kategories', 'penerbits', 'title'));
     }
+
 
     public function create()
     {
@@ -45,20 +49,14 @@ class bukuController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
-            'penerbit_id' => 'required|exists:penerbits,id',
-            'kategori_id' => 'required|exists:kategories,id',
+            'penerbit_id' => 'nullable|exists:penerbits,id',
+            'kategori_id' => 'nullable|exists:kategories,id',
             'tahun' => 'required|integer|min:1900|max:' . date('Y'),
             'isbn' => 'nullable|string|unique:books,isbn',
             'deskripsi' => 'nullable|string',
-            'bahasa' => 'required|string',
+            'bahasa' => 'nullable|string|max:50',
             'stok' => 'required|integer|min:1',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        $coverPath = null;
-        if ($request->hasFile('cover')) {
-            $coverPath = $request->file('cover')->store('covers', 'public');
-        }
 
         Book::create([
             'judul' => $request->judul,
@@ -68,15 +66,13 @@ class bukuController extends Controller
             'tahun' => $request->tahun,
             'isbn' => $request->isbn,
             'deskripsi' => $request->deskripsi,
-            'bahasa' => $request->bahasa,
+            'bahasa' => $request->bahasa ?? 'Indonesia',
             'stok' => $request->stok,
-            'cover' => $coverPath,
-            'is_available' => true,
-            'total_dipinjam' => 0,
+            'is_available' => $request->stok > 0,
         ]);
 
         return redirect()->route('buku.index')
-            ->with('success', 'Buku berhasil ditambahkan.');
+            ->with('success', 'Buku berhasil ditambahkan!');
     }
 
     public function edit($id) // Ubah parameter menjadi $id
@@ -88,48 +84,66 @@ class bukuController extends Controller
         
     }
 
-     public function update(Request $request, $id) // Ubah parameter menjadi $id
+    public function update(Request $request, $id)
     {
-        $buku = Book::findOrFail($id); // Cari buku berdasarkan ID
+        $book = Book::findOrFail($id);
         
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'penulis' => 'required|string|max:255',
-            'penerbit_id' => 'required|exists:penerbits,id',
-            'kategori_id' => 'required|exists:kategories,id',
-            'tahun' => 'required|integer|min:1900|max:' . date('Y'),
-            'isbn' => 'nullable|string|unique:books,isbn,' . $buku->id,
-            'deskripsi' => 'nullable|string',
-            'bahasa' => 'required|string',
-            'stok' => 'required|integer|min:1',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $coverPath = $buku->cover;
-        if ($request->hasFile('cover')) {
-            // Hapus cover lama jika ada
-            if ($buku->cover) {
-                Storage::disk('public')->delete($buku->cover);
-            }
-            $coverPath = $request->file('cover')->store('covers', 'public');
+        // Validasi hanya untuk field yang diisi
+        $rules = [];
+        $messages = [];
+        
+        if ($request->filled('judul')) {
+            $rules['judul'] = 'string|max:255';
         }
-
-        $buku->update([
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'penerbit_id' => $request->penerbit_id,
-            'kategori_id' => $request->kategori_id,
-            'tahun' => $request->tahun,
-            'isbn' => $request->isbn,
-            'deskripsi' => $request->deskripsi,
-            'bahasa' => $request->bahasa,
-            'stok' => $request->stok,
-            'cover' => $coverPath,
-            'is_available' => $request->stok > 0,
-        ]);
-
+        
+        if ($request->filled('penulis')) {
+            $rules['penulis'] = 'string|max:255';
+        }
+        
+        if ($request->filled('penerbit_id')) {
+            $rules['penerbit_id'] = 'exists:penerbits,id';
+        }
+        
+        if ($request->filled('kategori_id')) {
+            $rules['kategori_id'] = 'exists:kategories,id';
+        }
+        
+        if ($request->filled('tahun')) {
+            $rules['tahun'] = 'integer|min:1900|max:' . date('Y');
+        }
+        
+        if ($request->filled('isbn')) {
+            $rules['isbn'] = 'string|unique:books,isbn,' . $id;
+        }
+        
+        if ($request->filled('stok')) {
+            $rules['stok'] = 'integer|min:0';
+        }
+        
+        if ($request->filled('bahasa')) {
+            $rules['bahasa'] = 'string|max:50';
+        }
+        
+        if ($request->filled('deskripsi')) {
+            $rules['deskripsi'] = 'string';
+        }
+        
+        $validatedData = $request->validate($rules, $messages);
+        
+        // Update hanya field yang diisi
+        foreach ($validatedData as $key => $value) {
+            $book->$key = $value;
+        }
+        
+        // Update status ketersediaan jika stok diubah
+        if ($request->filled('stok')) {
+            $book->is_available = $request->stok > 0;
+        }
+        
+        $book->save();
+        
         return redirect()->route('buku.index')
-            ->with('success', 'Buku berhasil diupdate.');
+            ->with('success', 'Buku berhasil diperbarui!');
     }
 
     public function hapus(Book $buku)
