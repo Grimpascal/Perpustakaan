@@ -12,8 +12,14 @@
                             Dashboard
                         </a>
 
-                        <a href="/buku" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
-                            Buku
+                        <a href="/favorite" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                            Favorit
+                        </a>
+                        <a href="/peminjaman" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                            Peminjaman
+                        </a>
+                        <a href="/history" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                            Riwayat Peminjaman
                         </a>
 
                         <a href="/profile" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">

@@ -37,7 +37,7 @@ class UserController extends Controller
     $totalBooks = Book::where('is_available', true)->count();
     $availableBooks = Book::where('is_available', true)->where('stok', '>', 0)->count();
     
-    return view('user.dashboard', [
+    return view('user.dashboardUser', [
         'title' => 'Dashboard - Library',
         'books' => $books,
         'totalBooks' => $totalBooks,
@@ -81,17 +81,54 @@ class UserController extends Controller
     {
         $book = Book::with(['kategori', 'penerbit'])
             ->findOrFail($id);
-            
+
         $isFavorite = Favorite::where('user_id', Auth::id())
             ->where('book_id', $id)
             ->exists();
-            
+
         return view('user.book-detail', [
-            'title' => $book->judul,
-            'book' => $book,
+            'title'      => $book->judul,
+            'book'       => $book,
             'isFavorite' => $isFavorite
         ]);
     }
+
+    public function detail($id)
+{
+    $book = Book::with(['kategori', 'penerbit'])
+            ->findOrFail($id);
+
+        $isFavorite = Favorite::where('user_id', Auth::id())
+            ->where('book_id', $id)
+            ->exists();
+
+        return view('user.detail', [
+            'title'      => $book->judul,
+            'book'       => $book,
+            'isFavorite' => $isFavorite
+        ]);
+}
+
+    public function peminjaman()
+    {
+        $peminjamans = Peminjaman::with('book')
+            ->where('user_id', Auth::id())
+            ->where('status', 'dipinjam')
+            ->orderBy('tanggal_pinjam', 'desc')
+            ->get();
+            
+        // Hitung sisa hari untuk setiap peminjaman
+        $peminjamans->each(function($peminjaman) {
+            $peminjaman->sisa_hari = Carbon::now()->diffInDays($peminjaman->tanggal_kembali, false);
+        });
+            
+        return view('user.peminjaman', [
+            'title' => 'Peminjaman Saya',
+            'peminjamans' => $peminjamans
+        ]);
+    }
+
+
 
     // ============================
     // PINJAM BUKU
@@ -126,37 +163,16 @@ class UserController extends Controller
             'user_id' => Auth::id(),
             'book_id' => $book->id,
             'tanggal_pinjam' => Carbon::now(),
-            'tanggal_kembali' => Carbon::now()->addDays(7),
-            'tanggal_jatuh_tempo' => Carbon::now()->addDays(7),
+            'tanggal_dikembalikan' => Carbon::now()->addDays(7),
+            'tanggal_harus_kembali' => Carbon::now()->addDays(7),
             'status' => 'dipinjam',
             'denda' => 0
         ]);
 
-        return redirect()->route('user.peminjaman')
-            ->with('success', 'Buku "' . $book->judul . '" berhasil dipinjam! Harap dikembalikan sebelum ' . $peminjaman->tanggal_kembali->format('d M Y'));
+        return redirect()->route('user.pinjam.history')
+            ->with('success', 'Buku "' . $book->judul . '" berhasil dipinjam! Harap dikembalikan sebelum ' . $peminjaman->tanggal_harus_kembali->format('d M Y'));
     }
 
-    // ============================
-    // DAFTAR PEMINJAMAN AKTIF
-    // ============================
-    public function peminjaman()
-    {
-        $peminjamans = Peminjaman::with('book')
-            ->where('user_id', Auth::id())
-            ->where('status', 'dipinjam')
-            ->orderBy('tanggal_pinjam', 'desc')
-            ->get();
-            
-        // Hitung sisa hari untuk setiap peminjaman
-        $peminjamans->each(function($peminjaman) {
-            $peminjaman->sisa_hari = Carbon::now()->diffInDays($peminjaman->tanggal_kembali, false);
-        });
-            
-        return view('user.peminjaman', [
-            'title' => 'Peminjaman Saya',
-            'peminjamans' => $peminjamans
-        ]);
-    }
 
     // ============================
     // PENGEMBALIAN BUKU
@@ -169,52 +185,38 @@ class UserController extends Controller
             ->with('book')
             ->firstOrFail();
 
-        // Hitung denda jika telat
-        $jatuh_tempo = Carbon::parse($peminjaman->tanggal_kembali);
-        $hari_telat = Carbon::now()->diffInDays($jatuh_tempo, false) * -1;
-        
-        $denda = 0;
-        if ($hari_telat > 0) {
-            $denda = $hari_telat * 10000; // 10k per hari
+        // Set tanggal pengembalian saat ini
+        $tanggalKembali = Carbon::now();
+        $peminjaman->tanggal_dikembalikan = $tanggalKembali;
+
+        // Hitung jatuh tempo (7 hari setelah tanggal pinjam)
+        $jatuhTempo = Carbon::parse($peminjaman->tanggal_pinjam)->addDays(7);
+
+        // Hitung telat hari
+        if ($tanggalKembali->greaterThan($jatuhTempo)) {
+            $hariTelat = $tanggalKembali->diffInDays($jatuhTempo);
+            $peminjaman->status = 'terlambat';
+            $peminjaman->denda = $hariTelat * 10000; // 10k per hari
+        } else {
+            $peminjaman->status = 'dikembalikan';
+            $peminjaman->denda = 0;
         }
 
-        // Update peminjaman
-        $peminjaman->status = 'dikembalikan';
-        $peminjaman->tanggal_dikembalikan = Carbon::now();
-        $peminjaman->denda = $denda;
         $peminjaman->save();
 
-        // Tambah stok buku kembali
+        // Tambahkan stok buku karena telah dikembalikan
+        $peminjaman->book->increment('stok');
+
         $book = $peminjaman->book;
-        $book->stok += 1;
-        $book->is_available = true;
+        if ($book->stok > 0) {
+            $book->is_available = true;
+        }
         $book->save();
 
-        $message = 'Buku "' . $book->judul . '" berhasil dikembalikan!';
-        if ($denda > 0) {
-            $message .= ' Denda: Rp ' . number_format($denda, 0, ',', '.');
-        }
-
-        return redirect()->route('user.peminjaman')
-            ->with('success', $message);
+        return redirect()->route('user.pinjam.history')
+            ->with('success', 'Buku berhasil dikembalikan!');
     }
 
-    // ============================
-    // RIWAYAT PEMINJAMAN
-    // ============================
-    public function history()
-    {
-        $peminjamans = Peminjaman::with('book')
-            ->where('user_id', Auth::id())
-            ->where('status', 'dikembalikan')
-            ->orderBy('tanggal_dikembalikan', 'desc')
-            ->paginate(15);
-            
-        return view('user.history', [
-            'title' => 'Riwayat Peminjaman',
-            'peminjamans' => $peminjamans
-        ]);
-    }
 
     // ============================
     // FAVORIT (WISHLIST)
@@ -232,27 +234,17 @@ class UserController extends Controller
         ]);
     }
 
-    public function tambahFavorite($id)
+    public function addFavorite($id)
     {
-        $book = Book::findOrFail($id);
-        
-        $existing = Favorite::where('user_id', Auth::id())
-            ->where('book_id', $id)
-            ->first();
-
-        if ($existing) {
-            return redirect()->back()->with('info', 'Buku "' . $book->judul . '" sudah ada di favorit!');
-        }
-
-        Favorite::create([
+        Favorite::firstOrCreate([
             'user_id' => Auth::id(),
             'book_id' => $id
         ]);
 
-        return redirect()->back()->with('success', 'Buku "' . $book->judul . '" ditambahkan ke favorit!');
+        return redirect()->back()->with('success', 'Buku ditambahkan ke favorit!');
     }
 
-    public function hapusFavorite($id)
+   public function removeFavorite($id)
     {
         $favorite = Favorite::where('user_id', Auth::id())
             ->where('book_id', $id)
@@ -261,112 +253,20 @@ class UserController extends Controller
         $bookTitle = $favorite->book->judul;
         $favorite->delete();
 
-        return redirect()->back()->with('success', 'Buku "' . $bookTitle . '" dihapus dari favorit!');
+        return redirect()->back()->with('success', 'Buku dihapus dari favorit.');
     }
 
-    // ============================
-    // PROFIL USER
-    // ============================
-    public function profil()
+    public function history()
     {
-        $user = Auth::user();
-        
-        // Stats
-        $totalPeminjaman = Peminjaman::where('user_id', $user->id)->count();
-        $peminjamanAktif = Peminjaman::where('user_id', $user->id)
-            ->where('status', 'dipinjam')
-            ->count();
-        $totalFavorite = Favorite::where('user_id', $user->id)->count();
-        
-        return view('user.profil', [
-            'title' => 'Profil Saya',
-            'user' => $user,
-            'totalPeminjaman' => $totalPeminjaman,
-            'peminjamanAktif' => $peminjamanAktif,
-            'totalFavorite' => $totalFavorite
-        ]);
-    }
-
-    public function updateProfil(Request $request)
-    {
-        $user = Auth::user();
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-        ]);
-        
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
-        
-        return redirect()->route('user.profil')
-            ->with('success', 'Profil berhasil diperbarui!');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
-        
-        $user = Auth::user();
-        
-        // Cek password lama
-        if (!Hash::check($request->current_password, $user->password)) {
-            return redirect()->back()->with('error', 'Password lama tidak sesuai!');
-        }
-        
-        // Update password
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-        
-        return redirect()->route('user.profil')
-            ->with('success', 'Password berhasil diperbarui!');
-    }
-
-    // ============================
-    // NOTIFIKASI
-    // ============================
-    public function notifications()
-    {
-        // Cek peminjaman yang hampir jatuh tempo (2 hari lagi)
-        $peminjamans = Peminjaman::with('book')
+        $peminjaman = Peminjaman::with('book')
             ->where('user_id', Auth::id())
-            ->where('status', 'dipinjam')
+            ->orderBy('created_at', 'desc')
             ->get();
-            
-        $notifications = [];
-        
-        foreach ($peminjamans as $peminjaman) {
-            $sisaHari = Carbon::now()->diffInDays($peminjaman->tanggal_kembali, false);
-            
-            if ($sisaHari <= 2 && $sisaHari >= 0) {
-                $notifications[] = [
-                    'type' => 'warning',
-                    'message' => 'Buku "' . $peminjaman->book->judul . '" harus dikembalikan dalam ' . $sisaHari . ' hari',
-                    'book_id' => $peminjaman->book_id,
-                    'days_left' => $sisaHari
-                ];
-            } elseif ($sisaHari < 0) {
-                $notifications[] = [
-                    'type' => 'danger',
-                    'message' => 'Buku "' . $peminjaman->book->judul . '" terlambat ' . abs($sisaHari) . ' hari. Denda: Rp ' . number_format(abs($sisaHari) * 10000, 0, ',', '.'),
-                    'book_id' => $peminjaman->book_id,
-                    'days_overdue' => abs($sisaHari)
-                ];
-            }
-        }
-        
-        return view('user.notifications', [
-            'title' => 'Notifikasi',
-            'notifications' => $notifications
+
+        return view('user.history', [
+            'title' => 'Riwayat Peminjaman',
+            'peminjaman' => $peminjaman
         ]);
     }
+
 }

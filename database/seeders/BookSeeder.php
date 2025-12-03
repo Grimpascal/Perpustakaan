@@ -57,6 +57,7 @@ class BookSeeder extends Seeder
                 'stok' => 5,
                 'is_available' => true,
                 'total_dipinjam' => 12,
+                'cover' => 'books/clean_code.jpg',
             ],
             [
                 'judul' => 'The Pragmatic Programmer: Your Journey to Mastery',
@@ -70,6 +71,7 @@ class BookSeeder extends Seeder
                 'stok' => 4,
                 'is_available' => true,
                 'total_dipinjam' => 8,
+                'cover' => 'books/pragmatic_programmer.jpg',
             ],
             [
                 'judul' => 'Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones',
@@ -83,6 +85,7 @@ class BookSeeder extends Seeder
                 'stok' => 6,
                 'is_available' => true,
                 'total_dipinjam' => 15,
+                'cover' => 'books/atomic_habits.jpg',
             ],
         ];
 

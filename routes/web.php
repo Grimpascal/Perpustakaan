@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\penggunaController;
 use App\Http\Controllers\bukuController;
@@ -27,29 +28,36 @@ Route::middleware('auth')->group(function(){
 });
 
 // User Routes
-Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
+Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/books', [UserController::class, 'buku'])->name('books');
     Route::get('/book/{id}', [UserController::class, 'showBook'])->name('book.show');
     
-    // Peminjaman
-    Route::post('/borrow/{id}', [UserController::class, 'pinjam'])->name('pinjam');
-    Route::get('/borrowings', [UserController::class, 'peminjaman'])->name('peminjaman');
-    Route::post('/return/{id}', [UserController::class, 'kembalikan'])->name('kembalikan');
-    Route::get('/history', [UserController::class, 'history'])->name('history');
-    
-    // Favorit
-    Route::get('/favorites', [UserController::class, 'favorite'])->name('favorites');
-    Route::post('/favorite/add/{id}', [UserController::class, 'tambahFavorite'])->name('favorite.add');
-    Route::post('/favorite/remove/{id}', [UserController::class, 'hapusFavorite'])->name('favorite.remove');
-    
-    // Profil
-    Route::get('/profile', [UserController::class, 'profil'])->name('profil');
-    Route::put('/profile/update', [UserController::class, 'updateProfil'])->name('profile.update');
-    Route::put('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password.update');
-    
-    // Notifikasi
-    Route::get('/notifications', [UserController::class, 'notifications'])->name('notifications');
+    Route::get('buku', [UserController::class, 'buku'])
+        ->name('buku');
+
+    Route::get('/user/buku', [UserController::class, 'buku'])->name('user.buku');
+
+    Route::get('/book/{id}', [UserController::class, 'detail'])->name('book.detail');
+
+     Route::get('/user/peminjaman', [UserController::class, 'peminjaman'])->name('user.peminjaman');
+
+    Route::post('/user/buku/pinjam/{id}', [UserController::class, 'pinjam'])
+        ->name('user.pinjam');
+
+    Route::post('/user/buku/kembalikan/{id}', [UserController::class, 'kembalikan'])
+        ->name('user.kembalikan');
+
+    Route::get('/favorite', [UserController::class, 'favorite'])->name('user.favorite');
+    Route::post('/favorite/add/{id}', [UserController::class, 'addFavorite'])->name('user.favorite.add');
+    Route::delete('/favorite/remove/{id}', [UserController::class, 'removeFavorite'])->name('user.favorite.remove');
+
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/history', [UserController::class, 'history'])->name('user.pinjam.history');
+    Route::post('/peminjaman/kembalikan/{id}', [UserController::class, 'kembalikan'])->name('user.kembalikan');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
