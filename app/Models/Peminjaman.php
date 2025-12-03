@@ -29,4 +29,22 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(Book::class, 'book_id');
     }
+
+    public function getDendaAttribute()
+    {
+        if (!$this->tanggal_kembali) {
+            return 0;
+        }
+
+        $tanggalDeadline = \Carbon\Carbon::parse($this->tanggal_pinjam)->addDays(7);
+        $tanggalKembali = \Carbon\Carbon::parse($this->tanggal_kembali);
+
+        if ($tanggalKembali->isAfter($tanggalDeadline)) {
+            $hariTelat = $tanggalKembali->diffInDays($tanggalDeadline);
+            return $hariTelat * 10000; // denda per hari
+        }
+
+        return 0;
+    }
+
 }

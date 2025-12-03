@@ -1,4 +1,4 @@
-@extends('layouts.userBuku')
+@extends('Layouts.userBuku')
 
 @section('title', $title)
 

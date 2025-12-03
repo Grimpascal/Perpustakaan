@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\penggunaController;
 
@@ -30,23 +31,28 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('buku', [UserController::class, 'buku'])
         ->name('buku');
 
+    Route::get('/user/buku', [UserController::class, 'buku'])->name('user.buku');
+
+    Route::get('/book/{id}', [UserController::class, 'detail'])->name('book.detail');
+
+     Route::get('/peminjaman', [UserController::class, 'peminjaman'])->name('user.peminjaman');
+
     Route::post('/user/buku/pinjam/{id}', [UserController::class, 'pinjam'])
         ->name('user.pinjam');
 
     Route::post('/user/buku/kembalikan/{id}', [UserController::class, 'kembalikan'])
         ->name('user.kembalikan');
 
-    Route::get('/user/favorite', [UserController::class, 'favorite'])
-        ->name('user.favorite');
+    Route::get('/favorite', [UserController::class, 'favorite'])->name('user.favorite');
+    Route::post('/favorite/add/{id}', [UserController::class, 'addFavorite'])->name('user.favorite.add');
+    Route::delete('/favorite/remove/{id}', [UserController::class, 'removeFavorite'])->name('user.favorite.remove');
 
-    Route::post('/user/favorite/add/{id}', [UserController::class, 'tambahFavorite'])
-        ->name('user.favorite.add');
 
-    Route::delete('/user/favorite/delete/{id}', [UserController::class, 'hapusFavorite'])
-        ->name('user.favorite.delete');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('/user/profil', [UserController::class, 'profil'])
-        ->name('user.profil');
+    Route::get('/history', [UserController::class, 'history'])->name('user.pinjam.history');
+    Route::post('/peminjaman/kembalikan/{id}', [UserController::class, 'kembalikan'])->name('user.kembalikan');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

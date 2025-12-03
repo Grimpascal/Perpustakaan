@@ -21,7 +21,7 @@ class BookSeeder extends Seeder
                 'tahun' => 2008,
                 'kategori' => 'Programming',
                 'stok' => 5,
-                'cover' => null,
+                'cover' => 'books/clean_code.jpg',
             ],
             [
                 'judul' => 'The Pragmatic Programmer',
@@ -30,7 +30,7 @@ class BookSeeder extends Seeder
                 'tahun' => 1999,
                 'kategori' => 'Programming',
                 'stok' => 4,
-                'cover' => null,
+                'cover' => 'books/pragmatic_programmer.jpg',
             ],
             [
                 'judul' => 'Atomic Habits',
@@ -39,7 +39,7 @@ class BookSeeder extends Seeder
                 'tahun' => 2018,
                 'kategori' => 'Self-Development',
                 'stok' => 6,
-                'cover' => null,
+                'cover' => 'books/atomic_habits.jpg',
             ],
             [
                 'judul' => 'Harry Potter and the Philosopher\'s Stone',
@@ -48,7 +48,7 @@ class BookSeeder extends Seeder
                 'tahun' => 1997,
                 'kategori' => 'Fantasy',
                 'stok' => 3,
-                'cover' => null,
+                'cover' => 'books/harry_potter.jpg',
             ],
         ];
 

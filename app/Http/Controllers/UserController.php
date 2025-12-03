@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Peminjaman;
+use App\Models\Favorite;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -15,6 +18,31 @@ class UserController extends Controller
 
         return view('user/buku', compact('title', 'books'));
     }
+
+    public function detail($id)
+{
+    $book = Book::findOrFail($id);
+
+    return view('user.detail', [
+        'title' => 'Detail Buku',
+        'book' => $book
+    ]);
+}
+
+    public function peminjaman()
+    {
+        $peminjaman = Peminjaman::where('user_id', Auth::id())
+            ->with('book')
+            ->orderBy('status', 'asc')
+            ->get();
+
+        return view('user.peminjaman', [
+            'title' => 'Peminjaman Saya',
+            'peminjaman' => $peminjaman
+        ]);
+    }
+
+
 
     // ============================
     // PINJAM BUKU
@@ -51,22 +79,32 @@ class UserController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Hitung denda jika telat
-        $jatuh_tempo = Carbon::parse($peminjaman->tanggal_kembali);
-        $hari_telat = now()->diffInDays($jatuh_tempo, false) * -1;
+        // Set tanggal pengembalian saat ini
+        $tanggalKembali = Carbon::now();
+        $peminjaman->tanggal_kembali = $tanggalKembali;
 
-        if ($hari_telat > 0) {
-            $peminjaman->denda = $hari_telat * 10000; // 10k per hari
+        // Hitung jatuh tempo (7 hari setelah tanggal pinjam)
+        $jatuhTempo = Carbon::parse($peminjaman->tanggal_pinjam)->addDays(7);
+
+        // Hitung telat hari
+        if ($tanggalKembali->greaterThan($jatuhTempo)) {
+            $hariTelat = $tanggalKembali->diffInDays($jatuhTempo);
+            $peminjaman->status = 'telat';
+            $peminjaman->denda = $hariTelat * 10000; // 10k per hari
+        } else {
+            $peminjaman->status = 'selesai';
+            $peminjaman->denda = 0;
         }
 
-        $peminjaman->status = 'dikembalikan';
         $peminjaman->save();
 
-        // Tambah stok buku kembali
+        // Tambahkan stok buku karena telah dikembalikan
         $peminjaman->book->increment('stok');
 
-        return redirect()->back()->with('success', 'Buku berhasil dikembalikan!');
+        return redirect()->route('user.pinjam.history')
+            ->with('success', 'Buku berhasil dikembalikan!');
     }
+
 
     // ============================
     // FAVORIT (WISHLIST)
@@ -83,31 +121,23 @@ class UserController extends Controller
         ]);
     }
 
-    public function tambahFavorite($id)
+    public function addFavorite($id)
     {
-        $existing = Favorite::where('user_id', Auth::id())
-            ->where('book_id', $id)
-            ->first();
-
-        if ($existing) {
-            return redirect()->back()->with('info', 'Buku sudah ada di wishlist!');
-        }
-
-        Favorite::create([
+        Favorite::firstOrCreate([
             'user_id' => Auth::id(),
             'book_id' => $id
         ]);
 
-        return redirect()->back()->with('success', 'Ditambahkan ke wishlist!');
+        return redirect()->back()->with('success', 'Buku ditambahkan ke favorit!');
     }
 
-    public function hapusFavorite($id)
+   public function removeFavorite($id)
     {
         Favorite::where('user_id', Auth::id())
             ->where('book_id', $id)
             ->delete();
 
-        return redirect()->back()->with('success', 'Berhasil dihapus dari wishlist!');
+        return redirect()->back()->with('success', 'Buku dihapus dari favorit.');
     }
 
     public function profil()
@@ -117,4 +147,18 @@ class UserController extends Controller
             'user' => Auth::user()
         ]);
     }
+
+    public function history()
+    {
+        $peminjaman = Peminjaman::with('book')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user.history', [
+            'title' => 'Riwayat Peminjaman',
+            'peminjaman' => $peminjaman
+        ]);
+    }
+
 }

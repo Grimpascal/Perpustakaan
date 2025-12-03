@@ -44,7 +44,7 @@ class loginController extends Controller
     public function regisUser(Request $request){
 
         $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
@@ -55,14 +55,15 @@ class loginController extends Controller
         ]);
 
         $user = User::create([
-            'nama_lengkap' => $request->nama_lengkap,
+            'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => hash::make($request->password),
-            'remember_token' => Str::random(60),
+            'role' => 'user',
+
         ]);
 
-        if (empty($request->nama_lengkap) || empty($request->username) || empty($request->email) || empty($request->password)) {
+        if (empty($request->name) || empty($request->username) || empty($request->email) || empty($request->password)) {
          return back()->with('errorRegister', 'Ada kolom yang kosong harus diisi!');
         }
 
