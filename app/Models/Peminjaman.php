@@ -15,9 +15,11 @@ class Peminjaman extends Model
         'user_id',
         'book_id',
         'tanggal_pinjam',
-        'tanggal_kembali',
+        'tanggal_dikembalikan',
+        'tanggal_harus_kembali',
         'status',
-        'denda'
+        'denda',
+        'catatan'
     ];
 
     public function user()
@@ -32,12 +34,12 @@ class Peminjaman extends Model
 
     public function getDendaAttribute()
     {
-        if (!$this->tanggal_kembali) {
+        if (!$this->tanggal_dikembalikan) {
             return 0;
         }
 
         $tanggalDeadline = \Carbon\Carbon::parse($this->tanggal_pinjam)->addDays(7);
-        $tanggalKembali = \Carbon\Carbon::parse($this->tanggal_kembali);
+        $tanggalKembali = \Carbon\Carbon::parse($this->tanggal_dikembalikan);
 
         if ($tanggalKembali->isAfter($tanggalDeadline)) {
             $hariTelat = $tanggalKembali->diffInDays($tanggalDeadline);

@@ -22,7 +22,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|email',
             'photo' => 'image|mimes:jpg,png,jpeg|max:2048'
         ]);
@@ -34,7 +34,7 @@ class ProfileController extends Controller
             $user->photo = $filename;
         }
 
-        $user->name = $request->name;
+        $user->nama_lengkap = $request->nama_lengkap;
         $user->email = $request->email;
         $user->save();
 

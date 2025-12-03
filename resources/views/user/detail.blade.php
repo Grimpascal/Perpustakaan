@@ -17,9 +17,9 @@
         <div class="md:w-2/3">
             <h1 class="text-2xl font-bold mb-2">{{ $book->judul }}</h1>
             <p class="text-gray-600 mb-1"><strong>Penulis:</strong> {{ $book->penulis }}</p>
-            <p class="text-gray-600 mb-1"><strong>Penerbit:</strong> {{ $book->penerbit ?? '-' }}</p>
+            <p class="text-gray-600 mb-1"><strong>Penerbit:</strong> {{ $book->penerbit->nama_penerbit ?? '-' }}</p>
             <p class="text-gray-600 mb-1"><strong>Tahun:</strong> {{ $book->tahun }}</p>
-            <p class="text-gray-600 mb-3"><strong>Kategori:</strong> {{ $book->kategori ?? '-' }}</p>
+            <p class="text-gray-600 mb-3"><strong>Kategori:</strong> {{ $book->kategori->nama_kategori ?? '-' }}</p>
 
             <p class="mb-4">
                 @if($book->stok > 0)

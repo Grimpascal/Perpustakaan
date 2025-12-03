@@ -8,23 +8,30 @@
                     </a>
 
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/dashboard" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-indigo-500">
+                        <a href="{{ route('dashboard') }}"
+                            class="inline-flex items-center px-1 pt-1 text-sm font-medium
+                            {{ request()->routeIs('dashboard') ? 'text-gray-900 border-b-2 border-indigo-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent' }}">
                             Dashboard
-                        </a>
+                            </a>
 
-                        <a href="/favorite" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                            <a href="{{ route('user.favorite') }}"
+                            class="inline-flex items-center px-1 pt-1 text-sm font-medium
+                            {{ request()->routeIs('user.favorite') ? 'text-gray-900 border-b-2 border-indigo-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent' }}">
                             Favorit
-                        </a>
-                        <a href="/peminjaman" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
-                            Peminjaman
-                        </a>
-                        <a href="/history" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
-                            Riwayat Peminjaman
-                        </a>
+                            </a>
 
-                        <a href="/profile" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent">
+                            <a href="{{ route('user.pinjam.history') }}"
+                            class="inline-flex items-center px-1 pt-1 text-sm font-medium
+                            {{ request()->routeIs('user.pinjam.history') ? 'text-gray-900 border-b-2 border-indigo-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent' }}">
+                            Riwayat Peminjaman
+                            </a>
+
+                            <a href="{{ route('profile') }}"
+                            class="inline-flex items-center px-1 pt-1 text-sm font-medium
+                            {{ request()->routeIs('profile') ? 'text-gray-900 border-b-2 border-indigo-500' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent' }}">
                             Profil
-                        </a>
+                            </a>
+
                     </div>
                 </div>
                 <div class="hidden sm:ml-6 sm:flex sm:items-center relative">

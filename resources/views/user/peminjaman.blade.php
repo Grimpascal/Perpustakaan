@@ -25,7 +25,7 @@
         </thead>
 
         <tbody>
-            @forelse($peminjaman as $p)
+            @forelse($peminjamans as $p)
             <tr>
                 <td class="py-2 px-4 border">{{ $p->book->judul }}</td>
                 <td class="py-2 px-4 border">{{ $p->tanggal_pinjam }}</td>

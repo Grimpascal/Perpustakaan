@@ -30,7 +30,7 @@
                 </label>
             </div>
 
-            <h3 class="text-2xl font-semibold mt-3 text-gray-800">{{ $user->name }}</h3>
+            <h3 class="text-2xl font-semibold mt-3 text-gray-800">{{ $user->nama_lengkap }}</h3>
             <p class="text-gray-500 text-sm">{{ $user->email }}</p>
         </div>
 
@@ -40,7 +40,7 @@
             <div class="grid grid-cols-1 gap-4 mt-4">
                 <div>
                     <label class="font-medium text-gray-600">Nama Lengkap</label>
-                    <input type="text" name="name" value="{{ $user->name }}"
+                    <input type="text" name="nama_lengkap" value="{{ $user->nama_lengkap }}"
                         class="w-full mt-1 px-4 py-2 rounded-lg border focus:border-blue-500 outline-none">
                 </div>
 
