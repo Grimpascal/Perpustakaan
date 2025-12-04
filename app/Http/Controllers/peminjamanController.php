@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class peminjamanController extends Controller
 {
     // Ganti nama method dari showPeminjaman menjadi index
-    public function index(Request $request)  // Nama method HARUS index untuk resource
+    public function index(Request $request)
     {
         $search = $request->get('search');
         $status = $request->get('status');
@@ -36,7 +36,7 @@ class peminjamanController extends Controller
             });
         }
         
-        // Apply status filter
+        // Apply status filter - PERBAIKAN DI SINI
         if ($status) {
             if ($status == 'terlambat') {
                 $query->where('status', 'dipinjam')

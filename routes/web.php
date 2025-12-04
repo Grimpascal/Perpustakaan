@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function(){
 
 // User Routes
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/books', [UserController::class, 'buku'])->name('books');
     Route::get('/book/{id}', [UserController::class, 'showBook'])->name('book.show');
     
@@ -73,10 +72,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/buku/{buku}', [BukuController::class, 'update'])->name('buku.update');
     Route::delete('/buku/{buku}', [BukuController::class, 'hapus'])->name('buku.destroy');
 
-    // Peminjaman Routes - Sesuai dengan route yang ada
     Route::resource('peminjaman', peminjamanController::class)->except(['create', 'store', 'edit', 'update']);
    
-    // Ganti semua route peminjaman dengan ini:
     Route::resource('peminjaman', peminjamanController::class)->except(['create', 'store', 'edit', 'update']);
     Route::get('/peminjaman/{id}/detail', [peminjamanController::class, 'detail'])->name('peminjaman.detail');
     Route::get('/peminjaman/{id}/calculate-denda', [peminjamanController::class, 'calculateDenda'])->name('peminjaman.calculate-denda');
