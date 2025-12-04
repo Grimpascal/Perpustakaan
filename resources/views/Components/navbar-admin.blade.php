@@ -44,12 +44,6 @@
                     <i class="fa-solid fa-clock w-8"></i>
                     <span class="font-medium">Peminjaman</span>
                 </a>
-
-                <!-- Profil -->
-                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 group transition-colors duration-200">
-                    <i class="fa-regular fa-user w-5 mr-3 text-center"></i>
-                    <span class="font-medium">Profil</span>
-                </a>
             </nav>
         </div>
 
@@ -69,10 +63,6 @@
                     <a href="/profile" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
                         <i class="fa-regular fa-user mr-2 w-4 text-center"></i> 
                         <span>Profil Saya</span>
-                    </a>
-                    <a href="/settings" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
-                        <i class="fa-solid fa-gear mr-2 w-4 text-center"></i> 
-                        <span>Pengaturan</span>
                     </a>
                     <div class="border-t border-gray-200 my-1"></div>
                     <form method="POST" action="{{ route('logout') }}">

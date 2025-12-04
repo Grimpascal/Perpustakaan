@@ -10,6 +10,11 @@ class ProfileController extends Controller
      public function index()
     {
         $user = Auth::user();
+        $title = 'Profil Saya';
+
+        if($user->role == 'admin'){
+                return view('admin/profileAdmin', compact('title', 'user'));
+            }
 
         return view('user.profile', [
             'title' => 'Profil Saya',

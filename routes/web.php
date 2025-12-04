@@ -25,6 +25,9 @@ Route::middleware('guest')->group(function(){
 Route::middleware('auth')->group(function(){
     Route::get('/dashboard', [dashboardController::class, 'showDB'])->name('dashboard');
     Route::post('/logout', [loginController::class, 'logout'])->name('logout');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // User Routes
@@ -50,10 +53,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/favorite', [UserController::class, 'favorite'])->name('user.favorite');
     Route::post('/favorite/add/{id}', [UserController::class, 'addFavorite'])->name('user.favorite.add');
     Route::delete('/favorite/remove/{id}', [UserController::class, 'removeFavorite'])->name('user.favorite.remove');
-
-
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/history', [UserController::class, 'history'])->name('user.pinjam.history');
     Route::post('/peminjaman/kembalikan/{id}', [UserController::class, 'kembalikan'])->name('user.kembalikan');
